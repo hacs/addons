@@ -1,0 +1,17 @@
+name: Get HACS
+version: "1.0.0"
+slug: get
+description: The easiest way to get HACS for Home Assistant
+startup: once
+boot: manual
+url: "https://github.com/hacs/addons/tree/main/get"
+arch:
+  - armhf
+  - armv7
+  - aarch64
+  - amd64
+  - i386
+init: false
+stage: stable
+map:
+  - homeassistant_config:rw
