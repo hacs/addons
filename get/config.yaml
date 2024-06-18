@@ -13,6 +13,5 @@ arch:
   - amd64
   - i386
 init: false
-stage: stable
 map:
   - homeassistant_config:rw
