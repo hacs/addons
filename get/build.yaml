@@ -8,4 +8,4 @@ labels:
   org.opencontainers.image.title: "HACS: get"
   org.opencontainers.image.description: "Get HCS"
   org.opencontainers.image.source: "https://github.com/hacs/addons"
-  org.opencontainers.image.licenses: "Apache License 2.0"
+  org.opencontainers.image.licenses: "MIT License"
