@@ -1,6 +1,7 @@
 name: Get HACS
 version: "1.0.0"
 slug: get
+image: "ghcr.io/hacs/{arch}-addon-get"
 description: The easiest way to get HACS for Home Assistant
 startup: once
 boot: manual
