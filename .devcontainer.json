@@ -1,28 +1,40 @@
 {
     "name": "hacs/addons",
     "image": "ghcr.io/home-assistant/devcontainer:addons",
-    "appPort": [
-        "7123:8123",
-        "7357:4357"
+    "forwardPorts": [
+        8123,
+        4357
     ],
-    "postStartCommand": "bash devcontainer_bootstrap",
-    "runArgs": [
-        "-e",
-        "GIT_EDITOR=code --wait",
-        "--privileged"
-    ],
+    "portsAttributes": {
+        "4357": {
+            "label": "Home Assistant Observer"
+        },
+        "8123": {
+            "label": "Home Assistant UI"
+        }
+    },
+    "postStartCommand": "bash script/setup",
     "remoteUser": "root",
     "containerEnv": {
         "WORKSPACE_DIRECTORY": "${containerWorkspaceFolder}"
     },
+    "mounts": [
+        {
+            "source": "hacs-addon-dind-var-lib-docker",
+            "target": "/var/lib/docker",
+            "type": "volume"
+        },
+        {
+            "source": "hacs-addon-supervisor-data",
+            "target": "/supervisor_data",
+            "type": "volume"
+        }
+    ],
     "customizations": {
         "vscode": {
             "extensions": [
                 "timonwong.shellcheck",
                 "esbenp.prettier-vscode"
-            ],
-            "mounts": [
-                "type=volume,target=/var/lib/docker"
             ],
             "settings": {
                 "terminal.integrated.profiles.linux": {
@@ -37,5 +49,8 @@
                 "files.trimTrailingWhitespace": true
             }
         }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
     }
 }
