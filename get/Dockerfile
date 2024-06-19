@@ -1,8 +1,9 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
-RUN \
-    wget -O /get-hacs https://raw.githubusercontent.com/hacs/get/main/get \
-    && chmod +x /get-hacs
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-CMD ["bash", "/get-hacs"]
+COPY rootfs /
+RUN apk add --no-cache git
+
+CMD [ "/etc/addon/run" ]
