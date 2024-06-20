@@ -2,6 +2,8 @@
 
 The easiest way to get HACS for Home Assistant.
 
+> **This add-on does not run HACS. This add-on only provides the easiest way to download HACS.**
+
 ## Instructions
 
 1. Use the **Install** button above to build the add-on.
