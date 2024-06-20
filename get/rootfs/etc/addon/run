@@ -1,0 +1,49 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+
+CHANNEL=$(bashio::config 'channel' 'current')
+
+bashio::log.info "------------------------------------"
+bashio::log.info "Starting HACS download..."
+bashio::log.info "Channel: ${CHANNEL}"
+bashio::log.info "------------------------------------"
+
+
+if bashio::var.equals "${CHANNEL}" "current"; then
+    wget -O ./get-hacs https://raw.githubusercontent.com/hacs/get/main/get
+    chmod +x ./get-hacs
+    bash ./get-hacs
+
+elif bashio::var.equals "${CHANNEL}" "development"; then
+    bashio::log.info "Downloading the integration source..."
+    if bashio::fs.directory_exists "/tmp/hacs"; then
+        bashio::log.info "Cleaning up the previous download..."
+        rm -rf /tmp/hacs
+    fi
+
+    git clone --depth 1 --branch main https://github.com/hacs/integration.git /tmp/hacs
+
+    cd /tmp/hacs || bashio::exit.nok "Could not find the integration source"
+
+    bashio::log.info "Installing the frontend..."
+    bash ./scripts/install/frontend
+
+    bashio::log.info "Injecting a version..."
+    current_version=$(curl -sSL https://data-v2.hacs.xyz/integration/data.json | jq -r '.["172733314"].last_version')
+    updated_version="$(echo "${current_version}" | awk -F. -v OFS=. '{$NF += 1 ; print}').dev$(git rev-parse --short HEAD)"
+    python3 ./scripts/update/manifest.py --version "${updated_version}"
+    bashio::log.info "Version set to: ${updated_version}"
+
+    bashio::log.info "Copying the integration source..."
+    cd /
+    rm -rf /homeassistant/custom_components/hacs
+    mv /tmp/hacs/custom_components/hacs /homeassistant/custom_components/hacs
+    rm -rf /tmp/hacs
+
+    bashio::log.info "Download complete..."
+    bashio::log.info "Remember to restart Home Assistant before you configure it..."
+
+else
+    bashio::exit.nok "Invalid channel!"
+
+fi
