@@ -30,7 +30,7 @@ elif bashio::var.equals "${CHANNEL}" "development"; then
 
     bashio::log.info "Injecting a version..."
     current_version=$(curl -sSL https://data-v2.hacs.xyz/integration/data.json | jq -r '.["172733314"].last_version')
-    updated_version="$(echo "${current_version}" | awk -F. -v OFS=. '{$NF += 1 ; print}').dev$(git rev-parse --short HEAD)"
+    updated_version="$(echo "${current_version}" | awk -F. -v OFS=. '{$NF += 1 ; print}')-dev-$(git rev-parse --short HEAD)"
     python3 ./scripts/update/manifest.py --version "${updated_version}"
     bashio::log.info "Version set to: ${updated_version}"
 

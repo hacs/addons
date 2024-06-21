@@ -1,3 +1,7 @@
+# 1.1.1
+
+- Fix version format for development build
+
 # 1.1.0
 
 - Added option to get development builds
