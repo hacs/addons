@@ -1,3 +1,7 @@
+# 1.2.0
+
+- Set dev version to 2.0.0
+
 # 1.1.1
 
 - Fix version format for development build
