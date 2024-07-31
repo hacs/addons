@@ -1,3 +1,7 @@
+# 1.2.1
+
+- Create custom_components directory if it does not exist
+
 # 1.2.0
 
 - Set dev version to 2.0.0
