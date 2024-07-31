@@ -8,6 +8,10 @@ bashio::log.info "Starting HACS download..."
 bashio::log.info "Channel: ${CHANNEL}"
 bashio::log.info "------------------------------------"
 
+if ! bashio::fs.directory_exists "/homeassistant/custom_components"; then
+    bashio::log.info "Looks like HACS is your first custom integration, nice!"
+    mkdir /homeassistant/custom_components
+fi
 
 if bashio::var.equals "${CHANNEL}" "current"; then
     wget -O ./get-hacs https://raw.githubusercontent.com/hacs/get/main/get
@@ -44,5 +48,4 @@ elif bashio::var.equals "${CHANNEL}" "development"; then
 
 else
     bashio::exit.nok "Invalid channel!"
-
 fi
