@@ -33,7 +33,9 @@ elif bashio::var.equals "${CHANNEL}" "development"; then
     bash ./scripts/install/frontend
 
     bashio::log.info "Injecting a version..."
-    updated_version="2.0.0-dev-$(git rev-parse --short HEAD)"
+    current_tag="$(git describe --tags --abbrev=0)"
+    current_commit="$(git rev-parse --short HEAD)"
+    updated_version="$(echo ${current_tag} | awk -F. -v OFS=. '{$NF += 1 ; print}')-dev-${current_commit}"
     python3 ./scripts/update/manifest.py --version "${updated_version}"
     bashio::log.info "Version set to: ${updated_version}"
 
@@ -44,7 +46,7 @@ elif bashio::var.equals "${CHANNEL}" "development"; then
     rm -rf /tmp/hacs
 
     bashio::log.info "Download complete..."
-    bashio::log.info "Remember to restart Home Assistant before you configure it..."
+    bashio::log.info "Now, restart Home Assistant. Then, configure it."
 
 else
     bashio::exit.nok "Invalid channel!"
