@@ -46,7 +46,7 @@ elif bashio::var.equals "${CHANNEL}" "development"; then
     rm -rf /tmp/hacs
 
     bashio::log.info "Download complete..."
-    bashio::log.info "Now restart Home Assistant. Then, configure it."
+    bashio::log.info "Now, restart Home Assistant. Then, configure it."
 
 else
     bashio::exit.nok "Invalid channel!"
