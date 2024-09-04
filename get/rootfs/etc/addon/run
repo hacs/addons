@@ -25,7 +25,7 @@ elif bashio::var.equals "${CHANNEL}" "development"; then
         rm -rf /tmp/hacs
     fi
 
-    git clone --depth 1 --branch main https://github.com/hacs/integration.git /tmp/hacs
+    git clone --branch main https://github.com/hacs/integration.git /tmp/hacs
 
     cd /tmp/hacs || bashio::exit.nok "Could not find the integration source"
 
