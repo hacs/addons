@@ -25,7 +25,7 @@ elif bashio::var.equals "${CHANNEL}" "development"; then
         rm -rf /tmp/hacs
     fi
 
-    git clone --branch main https://github.com/hacs/integration.git /tmp/hacs
+    git clone --depth 1 --branch main https://github.com/hacs/integration.git /tmp/hacs
 
     cd /tmp/hacs || bashio::exit.nok "Could not find the integration source"
 
@@ -33,7 +33,7 @@ elif bashio::var.equals "${CHANNEL}" "development"; then
     bash ./scripts/install/frontend
 
     bashio::log.info "Injecting a version..."
-    current_tag="$(git describe --tags --abbrev=0)"
+    current_tag=$(curl -sSL https://data-v2.hacs.xyz/integration/data.json | jq -r '.["172733314"].last_version')
     current_commit="$(git rev-parse --short HEAD)"
     updated_version="$(echo ${current_tag} | awk -F. -v OFS=. '{$NF += 1 ; print}')-dev-${current_commit}"
     python3 ./scripts/update/manifest.py --version "${updated_version}"
