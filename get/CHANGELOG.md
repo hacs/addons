@@ -1,3 +1,7 @@
+# 1.3.1
+
+- Fix problems with getting the current version for development builds
+
 # 1.3.0
 
 - Dynamically get the version again
