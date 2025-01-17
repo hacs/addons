@@ -15,4 +15,4 @@ The easiest way to get HACS for Home Assistant.
 > the downloader has completed, and you need to do what it tells you (restart Home Assistant).
 > At this point, you can uninstall the add-on as you would no longer need it.
 > The rest of the operation is done in the Home Assistant UI.
-> Look at the documentation for more information.
+> Look at the [documentation](https://hacs.xyz/docs/use/configuration/basic/) for more information.
