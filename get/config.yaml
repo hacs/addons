@@ -4,7 +4,7 @@ slug: get
 image: "ghcr.io/hacs/{arch}-addon-get"
 description: The easiest way to get HACS for Home Assistant
 startup: once
-boot: manual
+boot: manual_only
 url: "https://github.com/hacs/addons/tree/main/get"
 arch:
   - armhf
