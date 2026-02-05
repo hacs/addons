@@ -1,7 +1,7 @@
-# HACS Add-ons Repository
+# Home Assistant Community Store apps
 
-This repository contains the source code for the HACS add-ons.
+This repository contains the source code for the Home Assistant Community Store apps.
 
-## Add-ons
+## Apps
 
-- [**get**: _The easiest way to get HACS for Home Assistant._](./get)
+- [**get**: _The easiest way to get Home Assistant Community Store for Home Assistant._](./get)
