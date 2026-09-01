@@ -9,6 +9,9 @@ The easiest way to get HACS for Home Assistant.
 1. Use the **Install** button above to build the app.
 2. Start the app.
 3. Navigate to the app logs and follow the instructions given there.
+4. After following the instructions go to Settings->Devices & Services
+5. Click the button "+ Add Integration" and search for HACS
+6. Follow the instructions
 
 > [!NOTE]
 > When you see the line "Remember to restart Home Assistant before you configure it" in the logs,
