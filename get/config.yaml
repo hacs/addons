@@ -1,17 +1,14 @@
 name: Get HACS
 version: "1.3.1"
 slug: get
-image: "ghcr.io/hacs/{arch}-addon-get"
+image: "ghcr.io/hacs/addon-get"
 description: The easiest way to get HACS for Home Assistant
 startup: once
 boot: manual
 url: "https://github.com/hacs/addons/tree/main/get"
 arch:
-  - armhf
-  - armv7
   - aarch64
   - amd64
-  - i386
 init: false
 schema:
   channel: list(current|development)?

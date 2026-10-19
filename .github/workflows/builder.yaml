@@ -1,8 +1,7 @@
 name: Builder
 
 env:
-  BUILD_ARGS: "--test"
-  MONITORED_FILES: "build.yaml config.yaml Dockerfile rootfs"
+  MONITORED_FILES: "config.yaml Dockerfile rootfs"
 
 on:
   push:
@@ -36,7 +35,9 @@ jobs:
         run: |
           declare -a changed_addons
           for addon in ${{ steps.addons.outputs.addons }}; do
-            if [[ "${{ steps.changed_files.outputs.all }}" =~ $addon ]]; then
+            if [[ "${{ steps.changed_files.outputs.all }}" =~ \.github/workflows/(builder|build-app)\.yaml ]]; then
+              changed_addons+=("\"${addon}\",");
+            elif [[ "${{ steps.changed_files.outputs.all }}" =~ $addon ]]; then
               for file in ${{ env.MONITORED_FILES }}; do
                   if [[ "${{ steps.changed_files.outputs.all }}" =~ $addon/$file ]]; then
                     if [[ ! "${changed_addons[@]}" =~ $addon ]]; then
@@ -56,62 +57,20 @@ jobs:
           else
             echo "No app had any monitored files changed (${{ env.MONITORED_FILES }})";
           fi
-  build:
+  build-app:
     needs: init
-    runs-on: ubuntu-latest
     if: needs.init.outputs.changed == 'true'
-    name: Build ${{ matrix.arch }} ${{ matrix.addon }} app
-    strategy:
-      matrix:
-        addon: ${{ fromJson(needs.init.outputs.changed_addons) }}
-        arch: ["aarch64", "amd64", "armhf", "armv7", "i386"]
+    name: Build ${{ matrix.addon }} app
     permissions:
       contents: read
+      id-token: write
       packages: write
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v7.0.1
-
-      - name: Get information
-        id: info
-        uses: home-assistant/actions/helpers/info@master
-        with:
-          path: "./${{ matrix.addon }}"
-
-      - name: Check if app should be built
-        id: check
-        run: |
-          if [[ "${{ steps.info.outputs.image }}" == "null" ]]; then
-            echo "Image property is not defined, skipping build"
-            echo "build_arch=false" >> $GITHUB_OUTPUT;
-          elif [[ "${{ steps.info.outputs.architectures }}" =~ ${{ matrix.arch }} ]]; then
-            echo "build_arch=true" >> $GITHUB_OUTPUT;
-            echo "image=$(echo ${{ steps.info.outputs.image }} | cut -d'/' -f3)" >> $GITHUB_OUTPUT;
-            if [[ -z "${{ github.head_ref }}" ]] && [[ "${{ github.event_name }}" == "push" ]]; then
-                echo "BUILD_ARGS=" >> $GITHUB_ENV;
-            fi
-          else
-            echo "${{ matrix.arch }} is not a valid arch for ${{ matrix.addon }} app, skipping build";
-            echo "build_arch=false" >> $GITHUB_OUTPUT;
-          fi
-
-      - name: Login to GitHub Container Registry
-        if: env.BUILD_ARGS != '--test'
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f  #v4.6.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build ${{ matrix.addon }} app
-        if: steps.check.outputs.build_arch == 'true'
-        uses: home-assistant/builder@2025.09.0
-        with:
-          args: |
-            ${{ env.BUILD_ARGS }} \
-            --${{ matrix.arch }} \
-            --target /data/${{ matrix.addon }} \
-            --image "${{ steps.check.outputs.image }}" \
-            --docker-hub "ghcr.io/${{ github.repository_owner }}" \
-            --addon
+    strategy:
+      fail-fast: false
+      matrix:
+        addon: ${{ fromJson(needs.init.outputs.changed_addons) }}
+    uses: ./.github/workflows/build-app.yaml
+    with:
+      app: ${{ matrix.addon }}
+      publish: ${{ github.event_name == 'push' }}
+    secrets: inherit
